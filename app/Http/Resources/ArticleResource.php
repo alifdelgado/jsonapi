@@ -16,15 +16,22 @@ class ArticleResource extends JsonResource
     {
         return [
             'type'  => 'articles',
-            'id'    =>  (string)$this->getRouteKey(),
+            'id'    =>  (string)$this->resource->getRouteKey(),
             'attributes'    =>  [
-                'title'     =>  $this->title,
-                'slug'      =>  $this->slug,
-                'content'   =>  $this->content,
+                'title'     =>  $this->resource->title,
+                'slug'      =>  $this->resource->slug,
+                'content'   =>  $this->resource->content,
             ],
             'links' =>  [
-                'self'  =>  url('/api/v1/articles/' . $this->getRouteKey())
+                'self'  =>  url('/api/v1/articles/' . $this->resource->getRouteKey())
             ]
         ];
+    }
+
+    public function toResponse($request)
+    {
+        return parent::toResponse($request)->withHeaders([
+            'Location'  =>  route('api.v1.articles.show', $this->resource)
+        ]);
     }
 }
